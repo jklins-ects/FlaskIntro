@@ -20,7 +20,7 @@
 # Import the Flask class from the flask module
 
 # Create an instance of the Flask app
-from flask import Flask, render_template # render_template loads HTML from /templates
+from flask import Flask, render_template, request # render_template loads HTML from /templates
 import datetime
 
 
@@ -44,6 +44,15 @@ def time():
     # return f"<h2>Current Server Time: {now}</h2>"
 
     return render_template("time.html", current_time=now)
+
+
+@app.route("/form", methods=['GET', 'POST'])
+def form():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        ssn = request.form.get('ssn')
+        return render_template("greeting.html", name=name, ssn=ssn)
+    return render_template("form.html")
 
 
 if __name__ == "__main__":
