@@ -20,6 +20,7 @@
 # Import the Flask class from the flask module
 
 # Create an instance of the Flask app
+import requests
 from flask import Flask, render_template, request # render_template loads HTML from /templates
 import datetime
 
@@ -53,6 +54,25 @@ def form():
         ssn = request.form.get('ssn')
         return render_template("greeting.html", name=name, ssn=ssn)
     return render_template("form.html")
+
+
+@app.route("/catfact")
+def catfact():
+    response = requests.get("https://catfact.ninja/fact")
+    if response.status_code == 200:  # we successfully got a response
+        data = response.json()
+        fact = data["fact"]
+    else:
+        fact = "Could not fetch a cat fact right now. Try again later"
+
+    picresp = requests.get("https://cataas.com/cat?json=true")
+    if picresp.status_code == 200:  # we successfully got a response
+        picdata = picresp.json()
+        pic = picdata["url"]
+    else:
+        pic = "/images/404.png"
+
+    return render_template("catfact.html", cat_fact=fact, pic=pic)
 
 
 if __name__ == "__main__":
