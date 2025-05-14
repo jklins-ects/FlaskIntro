@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dog Images</title>
+        <link
+            rel="stylesheet"
+            href="{{url_for('static', filename='css/styles.css')}}"
+        />
+    </head>
+    <body>
+        <h2>Search for a Dog by Breed</h2>
+
+        <!-- Create a basic Form -->
+        <form action="/dog" method="POST">
+            <input
+                type="text"
+                name="breed"
+                placeholder="e.g. pug, hound, retriever"
+                required
+                value="{{breed}}"
+            />
+            <button type="submit">Show me the dog!</button>
+        </form>
+        <!-- Template logic: Show this only if there is an error -->
+        {% if error %}
+        <p style="color: red">{{error}}</p>
+        {% endif %} {% if image_url %}
+        <h3>Here's your dog ({{breed}}) - it's better than any cat</h3>
+        <img src="{{image_url}}" alt="Random dog" style="max-width: 400px" />
+        {% endif %}
+
+        <p><a href="/">Go Home</a></p>
+    </body>
+</html>

@@ -20,9 +20,9 @@
 # Import the Flask class from the flask module
 
 # Create an instance of the Flask app
+import datetime
 import requests
 from flask import Flask, render_template, request # render_template loads HTML from /templates
-import datetime
 
 
 app = Flask(__name__)
@@ -73,6 +73,26 @@ def catfact():
         pic = "/images/404.png"
 
     return render_template("catfact.html", cat_fact=fact, pic=pic)
+
+
+@app.route("/dog", methods=["GET", "POST"])
+def dog():
+    image_url: str | None = None  # This will be the dog image url
+    error = None  # Holds an error message if something goes wrong
+    breed = ""
+
+    if request.method == "POST":
+        breed = request.form.get("breed").lower()
+        api_url = f"https://dog.ceo/api/breed/{breed}/images/random"
+        response = requests.get(api_url)
+
+        # check for valid response
+        if response.status_code == 200 and response.json().get("status") == "success":
+            image_url = response.json()["message"]
+        else:
+            error = f"Could not find breed '{breed}'. Try another!"
+
+    return render_template("dog.html", image_url=image_url, error=error, breed=breed)
 
 
 if __name__ == "__main__":
